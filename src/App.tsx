@@ -1,0 +1,13 @@
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import { AdminLayout } from './layouts/AdminLayout'
+import { PublicLayout } from './layouts/PublicLayout'
+import { CrudPage } from './pages/admin/CrudPage'
+import { DashboardPage } from './pages/admin/DashboardPage'
+import { LoginPage } from './pages/admin/LoginPage'
+import { MessagesAdminPage, ReservationsAdminPage } from './pages/admin/PrivateListsPage'
+import { HomepagePage, SettingsPage } from './pages/admin/SettingsPage'
+import { ClubPage, ContactPage, EventsPage, GalleryPage, ReservationPage, RoomsPage } from './pages/public/CollectionPages'
+import { HomePage } from './pages/public/HomePage'
+import { NotFoundPage } from './pages/public/NotFoundPage'
+export default function App() { return <BrowserRouter><AuthProvider><Routes><Route element={<PublicLayout />}><Route path="/" element={<HomePage />} /><Route path="/events" element={<EventsPage />} /><Route path="/gallery" element={<GalleryPage />} /><Route path="/club" element={<ClubPage />} /><Route path="/rooms" element={<RoomsPage />} /><Route path="/reservation" element={<ReservationPage />} /><Route path="/contact" element={<ContactPage />} /></Route><Route path="/admin" element={<LoginPage />} /><Route path="/admin" element={<AdminLayout />}><Route path="dashboard" element={<DashboardPage />} /><Route path="homepage" element={<HomepagePage />} /><Route path="events" element={<CrudPage table="events" />} /><Route path="gallery" element={<CrudPage table="gallery_images" />} /><Route path="spaces" element={<CrudPage table="club_spaces" />} /><Route path="rooms" element={<CrudPage table="service_rooms" />} /><Route path="managers" element={<CrudPage table="managers" />} /><Route path="djs" element={<CrudPage table="djs" />} /><Route path="reservations" element={<ReservationsAdminPage />} /><Route path="messages" element={<MessagesAdminPage />} /><Route path="hours" element={<CrudPage table="opening_hours" />} /><Route path="settings" element={<SettingsPage />} /><Route index element={<Navigate to="dashboard" replace />} /></Route><Route path="*" element={<NotFoundPage />} /></Routes></AuthProvider></BrowserRouter> }

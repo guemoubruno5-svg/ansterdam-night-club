@@ -1,0 +1,5 @@
+import { CalendarDays } from 'lucide-react'
+import type { ContentItem } from '../../types'
+import { MediaPlaceholder } from '../../components/shared/MediaPlaceholder'
+export const Reveal = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => <div className={`reveal ${className}`}>{children}</div>
+export function ItemGrid({ items, kind = 'card' }: { items: ContentItem[]; kind?: string }) { return <div className={`item-grid ${kind}`}>{items.map(x => <article className="content-card" key={x.id}><MediaPlaceholder src={(x.image_url || x.photo_url) as string} label={(x.title || x.name || 'ANSTERDAM') as string} /><div className="card-body">{kind === 'events' && <span className="date"><CalendarDays size={15} />{x.event_date ? new Date(x.event_date as string).toLocaleDateString('fr-FR') : 'Date à venir'}</span>}<h3>{x.title || x.name}</h3><p>{x.description as string}</p>{kind === 'rooms' && <><span className="tag">{x.availability as string || 'Disponibilité à confirmer'}</span><b className="price">{x.price ? `${x.price}` : 'Tarif à confirmer'}</b></>}</div></article>)}</div> }

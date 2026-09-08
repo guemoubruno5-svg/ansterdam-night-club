@@ -1,0 +1,18 @@
+import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useOutletContext } from 'react-router-dom'
+import { ContactForm, ReservationForm } from '../../components/public/Forms'
+import { MediaPlaceholder } from '../../components/shared/MediaPlaceholder'
+import { SectionTitle } from '../../components/shared/SectionTitle'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { listContent } from '../../services/content'
+import type { ContentItem, SiteSettings } from '../../types'
+import { ItemGrid } from './shared'
+function Intro({ eyebrow, title, text }: { eyebrow: string; title: string; text: string }) { return <section className="page-hero"><SectionTitle eyebrow={eyebrow} title={title} text={text} /></section> }
+function useItems(table: 'events' | 'service_rooms' | 'club_spaces' | 'gallery_images') { const [items, setItems] = useState<ContentItem[]>([]); useEffect(() => { listContent(table).then(setItems) }, [table]); return items }
+export function EventsPage() { useDocumentTitle('Événements'); const items = useItems('events'); return <><Intro eyebrow="AGENDA" title="ÉVÉNEMENTS" text="Découvrez les prochaines expériences ANSTERDAM." /><section className="section"><ItemGrid items={items} kind="events" /></section></> }
+export function RoomsPage() { useDocumentTitle('Chambres de service'); const items = useItems('service_rooms'); return <><Intro eyebrow="CONFORT SUR PLACE" title="NOS CHAMBRES DE SERVICE" text="Confort et tranquillité sur place." /><section className="section"><ItemGrid items={items} kind="rooms" /></section></> }
+export function ClubPage() { useDocumentTitle('Notre Club'); const items = useItems('club_spaces'); return <><Intro eyebrow="UN LIEU UNIQUE À PLANÈTE" title="NOTRE CLUB" text="Musique, lumière, design et bonne compagnie dans un univers nocturne premium." /><section className="section"><ItemGrid items={items} /></section></> }
+export function GalleryPage() { useDocumentTitle('Galerie'); const items = useItems('gallery_images'); const [active, setActive] = useState<number | null>(null); const move = (d: number) => setActive(x => x === null ? null : (x + d + items.length) % items.length); return <><Intro eyebrow="EN IMAGES" title="VIVEZ L’AMBIANCE" text="Les vraies images du club seront publiées ici." /><section className="section gallery-grid">{items.map((x, i) => <button key={x.id} onClick={() => setActive(i)}><MediaPlaceholder label={(x.title || x.name) as string} src={x.image_url as string} /></button>)}</section>{active !== null && <div className="lightbox" role="dialog" aria-modal="true"><button onClick={() => setActive(null)} aria-label="Fermer"><X /></button><button onClick={() => move(-1)} aria-label="Image précédente"><ChevronLeft /></button><MediaPlaceholder label={(items[active].title || 'Photo') as string} src={items[active].image_url as string} /><button onClick={() => move(1)} aria-label="Image suivante"><ChevronRight /></button></div>}</> }
+export function ReservationPage() { useDocumentTitle('Réservation'); return <><Intro eyebrow="VOTRE PROCHAINE NUIT" title="RÉSERVEZ VOTRE EXPÉRIENCE" text="Aucun paiement ni renseignement bancaire n’est demandé." /><section className="section narrow"><ReservationForm /></section></> }
+export function ContactPage() { useDocumentTitle('Contact'); const s = useOutletContext<SiteSettings>(); return <><Intro eyebrow="DUBRÉKA · PLANÈTE" title="CONTACT" text="Nous sommes à votre écoute." /><section className="section form-section"><div><h2>Nous trouver</h2><p>{s.address}</p>{s.phone && <p>{s.phone}</p>}{s.email && <p>{s.email}</p>}</div><ContactForm /></section></> }
